@@ -1,13 +1,21 @@
 package com.example.project_athena;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextPaint;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -26,11 +34,22 @@ public class MainActivity extends AppCompatActivity {
 
     //animatie initen
     Animation animation;
+    AnimationDrawable animationDrawable;
 
+    //constraint layout initen voor background
+    ConstraintLayout constraintLayout;
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        );
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
 
         //texviews connecten
         textView1 = findViewById(R.id.text1);
@@ -41,10 +60,14 @@ public class MainActivity extends AppCompatActivity {
         //imagevieuws conecteren
         imageView1 = findViewById(R.id.image1);
 
+        //constraint layout connecteren
+        constraintLayout = findViewById(R.id.constraintLayout1);
+
         //gradiant op text toevoegen
         setColorToGradiant(textView1);
 
         //functies
+        background_ani();
         click1();
         click2();
     }
@@ -85,7 +108,14 @@ public class MainActivity extends AppCompatActivity {
         if (aangeklikt){
             animation = AnimationUtils.loadAnimation(this,R.anim.rotate);
             imageView1.startAnimation(animation);
-            System.out.println("its happening");
         }
+    }
+
+    public void background_ani(){
+
+        animationDrawable = (AnimationDrawable) constraintLayout.getBackground();
+        animationDrawable.setEnterFadeDuration(10);
+        animationDrawable.setExitFadeDuration(2000);
+        animationDrawable.start();
     }
 }
